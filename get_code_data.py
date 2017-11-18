@@ -18,17 +18,20 @@ sys.exit()
 import sys
 import tushare as ts
 import os
+import time
+
 class DateClass:
 	def __init(self):
 		print 'init'
-	
-	def GetDate(self):
+
+	def GetDate(self,stock_code):
 		'''
 		hs300 = ts.get_hs300s()
 		print 'hs300:',hs300
 		hs300.to_csv('/Users/zj/company_code/stock_data_analysis/hs300.csv')
 		'''
-		stock_code = '000776'
+		#stock_code = '000776'
+		print 'GetDate stock_code:',stock_code
 		cons = ts.get_apis()
 		#qfq 前复权
 		df_cons = ts.bar(stock_code,conn=cons,adj='qfq',ma=[60,120,250])
@@ -53,8 +56,42 @@ class DateClass:
 			print 'content:',content
 			current_tmp = os.popen(content)
 
+	def GetPEPB(self):
+		df = ts.get_stock_basics()
+		pe = df.ix['000776']['pe']
+		pb = df.ix['000776']['pb']
+		#xxx= df.ix['000776']['20170508']
+		print 'GetPEPB pe:',pe,' pb:',pb
+
+	def GetAllMarkert(self):
+		df = ts.get_index()
+		print 'GetAllMarkert df:',df
+
+	def ReadStockListFromFile(self,stock_list):
+		file_object2 = open("/Users/zj/company_code/stock_data_analysis/gupiao_stock.txt",'r')
+		try:
+			lines = file_object2.readlines()
+			#print "type(lines)=",type(lines)
+			for line in lines:
+				tmp_line = line.split(" ")
+				stock_list[tmp_line[0].strip("\n")] = tmp_line[1].strip("\n")
+		finally:
+			file_object2.close()
+
 if __name__ == '__main__':
-	DateClass().GetDate()
+	#get stocklist from file
+	stock_list = {}
+	DateClass().ReadStockListFromFile(stock_list)
+	print 'stock_list:',stock_list
+	#get stock data from remote server 
+	for key in stock_list:
+		#stock_code = '000776'
+		print 'key:',key,' value:',stock_list[key]
+		DateClass().GetDate(stock_list[key])
+		time.sleep(10)
+	#//DateClass().GetPEPB()
+	#//DateClass().GetAllMarkert()
+	#exit program
 	DateClass().Exit()
 
 
