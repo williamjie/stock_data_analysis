@@ -87,8 +87,8 @@ if __name__ == '__main__':
 	for key in stock_list:
 		#stock_code = '000776'
 		print 'key:',key,' value:',stock_list[key]
+		time.sleep(60)
 		DateClass().GetDate(stock_list[key])
-		time.sleep(10)
 	#//DateClass().GetPEPB()
 	#//DateClass().GetAllMarkert()
 	#exit program
