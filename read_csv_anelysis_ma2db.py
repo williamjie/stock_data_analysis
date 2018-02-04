@@ -68,11 +68,12 @@ def ReadStockListFromFile(stock_list):
 		#print "type(lines)=",type(lines)
 		for line in lines:
 			tmp_line = line.split(" ")
-			stock_list[tmp_line[0].strip("\n")] = tmp_line[1].strip("\n")
+			stock_list[tmp_line[1].strip("\n")] = tmp_line[0].strip("\n")
+			#stock_list[tmp_line[0].strip("\n")] = tmp_line[1].strip("\n")
 	finally:
 		file_object2.close()
 
-def ma_algrithm_own(days,my_set,stock_code):
+def ma_algrithm_own(days,my_set,stock_code,stock_list):
 	#results = my_set.find({"datetime":{'$gte':timestamp0,'$lt':timestamp1}})
 	buy_cost = 0
 	buy_count = 0
@@ -104,7 +105,7 @@ def ma_algrithm_own(days,my_set,stock_code):
 						buy_cost = buy_cost - close*buy_num
 						buy_count = buy_count + shou_count
 						print 'stock_code:',stock_code," day",day," close:",res["close"]," ma250:",res["ma250"]
-						print '============stock_code:',stock_code," 买入1:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率:",ret
+						print '============stock_name:',stock_list[stock_code],' stock_code:',stock_code," 买入1:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率(close_ma250):",ret
 					'''
 					
 					'''
@@ -116,7 +117,7 @@ def ma_algrithm_own(days,my_set,stock_code):
 						buy_cost = buy_cost - close*buy_num
 						buy_count = buy_count + shou_count
 						print 'stock_code:',stock_code," day",day," close:",res["close"]," ma250:",res["ma250"]
-						print '============stock_code:',stock_code," 买入2:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率:",ret
+						print '============stock_name:',stock_list[stock_code],' stock_code:',stock_code," 买入2:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率(close_ma250):",ret
 					'''
 					
 					if ret >30 and ret<=45 :
@@ -127,7 +128,7 @@ def ma_algrithm_own(days,my_set,stock_code):
 						buy_cost = buy_cost - close*buy_num
 						buy_count = buy_count + shou_count
 						print 'stock_code:',stock_code," day",day," close:",res["close"]," ma250:",res["ma250"]
-						print '============stock_code:',stock_code," 买入3:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率:",ret
+						print '============stock_name:',stock_list[stock_code],' stock_code:',stock_code," 买入3:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率(close_ma250):",ret
 					
 					if ret > 45 :
 					#if ret >60 and ret<=75 and type4 <= 10:
@@ -137,7 +138,7 @@ def ma_algrithm_own(days,my_set,stock_code):
 						buy_cost = buy_cost - close*buy_num
 						buy_count = buy_count + shou_count
 						print 'stock_code:',stock_code," day",day," close:",res["close"]," ma250:",res["ma250"]
-						print '============ stock_code:',stock_code," 买入4:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率:",ret
+						print '============stock_name:',stock_list[stock_code],' stock_code:',stock_code," 买入4:buy_count:",buy_count," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 比率(close_ma250):",ret
 
 					'''
 					if ret >40 and ret<=50:
@@ -152,7 +153,7 @@ def ma_algrithm_own(days,my_set,stock_code):
 					if ret > 20:
 						if (sell_own+buy_cost) > 0:
 							print 'stock_code:',stock_code," day",day," close:",res["close"]," ma250:",res["ma250"]
-							print 'stock_code:',stock_code," 卖出#######buy_cost:",buy_cost," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 盈利率:",(sell_own+buy_cost)*100/-buy_cost," 高过M250比率:",ret
+							print 'stock_name:',stock_list[stock_code],' stock_code:',stock_code," 卖出#######buy_cost:",buy_cost," sell_own:",sell_own," 盈余:",(sell_own+buy_cost)," 持仓:",buy_count*100," 盈利率:",(sell_own+buy_cost)*100/-buy_cost," 高过M250比率:",ret
 
 	print 'ma_algrithm_own ----------------------exit----------------------'
 
@@ -161,7 +162,7 @@ if __name__ == '__main__':
 	print "---------------------------------main enter---------------------------"
 	conn = MongoClient('127.0.0.1', 27017)
 	db = conn.stockdata
-	days = getEveryDay('2010-01-01','2017-11-17')
+	days = getEveryDay('2017-01-01','2017-11-20')
 
 	stock_list = {}
 	ReadStockListFromFile(stock_list)
@@ -169,26 +170,26 @@ if __name__ == '__main__':
 
 	'''
 	count = 0
-	for key in stock_list:
+	for stock_code in stock_list:
 		count = count +1
-		stock_code = stock_list[key]
+		#stock_code = stock_list[key]
 		print 'index of count:',count,' key:',key,' stock_code:',stock_code
 		csv2mongdb(db,stock_code)
 	'''
 
-	'''
+	#'''
 	qfq_count = 0
-	for key in stock_list:
+	for stock_code in stock_list:
 		qfq_count = qfq_count +1
-		stock_code = stock_list[key]
+		#stock_code = stock_list[key]
 		print 'qfq_count:',qfq_count,' stock_code:',stock_code
 		my_set = db.table_qfq
-		ma_algrithm_own(days,my_set,stock_code)
+		ma_algrithm_own(days,my_set,stock_code,stock_list)
+	#'''
 	'''
-
 	my_set = db.table_qfq
 	ma_algrithm_own(days,my_set,'603288')
-
+	'''
 
 
 

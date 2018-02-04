@@ -77,7 +77,7 @@ class DateClass:
 			#print "type(lines)=",type(lines)
 			for line in lines:
 				tmp_line = line.split(" ")
-				stock_list[tmp_line[0].strip("\n")] = tmp_line[1].strip("\n")
+				stock_list[tmp_line[1].strip("\n")] = tmp_line[0].strip("\n")
 		finally:
 			file_object2.close()
 
@@ -102,11 +102,11 @@ if __name__ == '__main__':
 	print 'stock_list:',stock_list
 	#get stock data from remote server 
 	stock_num = 0
-	for key in stock_list:
+	for stock_code in stock_list:
 		#stock_code = '000776'
-		stock_code = stock_list[key]
+		#stock_code = stock_list[key]
 		stock_num = stock_num +1
-		print '--------enter-------index of stock:',stock_num,' key:',key,' stock_code:',stock_list[key]
+		print '--------enter-------index of stock:',stock_num,' stock_code:',stock_code
 		file_name_qfq = '/Users/zj/company_code/stock_data_analysis/data/' + stock_code +'_ma_qfq.csv'
 		file_name = '/Users/zj/company_code/stock_data_analysis/data/' + stock_code +'_ma.csv'
 		file_name_hfq = '/Users/zj/company_code/stock_data_analysis/data/' + stock_code +'_ma_hfq.csv'
